@@ -3,7 +3,7 @@
     Purpose: Full-refresh load of the nine Olist Bronze tables.
 
     IMPORTANT:
-    - SQL Server must be able to read the directory: C:\Olist\
+    - SQL Server must be able to read the directory: 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\
     - If your SQL Server-visible source folder is different, replace that path
       in the nine BULK INSERT statements before execution.
     - The geolocation CSV uses LF row endings (0x0a); the other eight attached
@@ -69,7 +69,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_customers_dataset.csv';
         BULK INSERT #stg_olist_customers
-        FROM 'C:\Olist\olist_customers_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_customers_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -134,7 +134,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_geolocation_dataset.csv';
         BULK INSERT #stg_olist_geolocation
-        FROM 'C:\Olist\olist_geolocation_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_geolocation_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -201,7 +201,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_order_items.csv';
         BULK INSERT #stg_olist_order_items
-        FROM 'C:\Olist\olist_order_items.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_order_items.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -273,7 +273,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_orders_dataset.csv';
         BULK INSERT #stg_olist_orders
-        FROM 'C:\Olist\olist_orders_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_orders_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -344,7 +344,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_payments_dataset.csv';
         BULK INSERT #stg_olist_payments
-        FROM 'C:\Olist\olist_payments_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_payments_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -413,7 +413,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_products_dataset.csv';
         BULK INSERT #stg_olist_products
-        FROM 'C:\Olist\olist_products_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_products_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -488,7 +488,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_reviews_dataset.csv';
         BULK INSERT #stg_olist_reviews
-        FROM 'C:\Olist\olist_reviews_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_reviews_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -556,7 +556,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: olist_sellers_dataset.csv';
         BULK INSERT #stg_olist_sellers
-        FROM 'C:\Olist\olist_sellers_dataset.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\olist_sellers_dataset.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
@@ -616,7 +616,7 @@ BEGIN
 
         PRINT '>> Bulk Inserting File Into Staging: product_category_translation.csv';
         BULK INSERT #stg_product_category_translation
-        FROM 'C:\Olist\product_category_translation.csv'
+        FROM 'C:\Users\crisn\Desktop\github_portfolio\04_brazilian_e_commerce\Brazilian-E-Commerce-Data-Modeling-Project\01-etl-data-pipeline\source_files\product_category_translation.csv'
         WITH (
             FORMAT = 'CSV',
             FIRSTROW = 2,
