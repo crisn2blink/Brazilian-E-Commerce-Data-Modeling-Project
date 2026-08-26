@@ -22,10 +22,10 @@
         <mxCell id="1oHVsVZ3AlvwdNuibzdS-9" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=1;fontSize=26;" value="olist_customers_dataset" vertex="1">
           <mxGeometry height="110" width="330" x="-590" y="200" as="geometry" />
         </mxCell>
-        <mxCell id="1oHVsVZ3AlvwdNuibzdS-10" parent="1oHVsVZ3AlvwdNuibzdS-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=26;" value="customer_unique_id (pk)" vertex="1">
+        <mxCell id="1oHVsVZ3AlvwdNuibzdS-10" parent="1oHVsVZ3AlvwdNuibzdS-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=26;" value="customer_unique_id" vertex="1">
           <mxGeometry height="40" width="330" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="1oHVsVZ3AlvwdNuibzdS-11" parent="1oHVsVZ3AlvwdNuibzdS-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=26;" value="customer_id" vertex="1">
+        <mxCell id="1oHVsVZ3AlvwdNuibzdS-11" parent="1oHVsVZ3AlvwdNuibzdS-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=26;" value="customer_id (pk)" vertex="1">
           <mxGeometry height="40" width="330" y="70" as="geometry" />
         </mxCell>
         <mxCell id="1oHVsVZ3AlvwdNuibzdS-13" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;rounded=1;fontSize=26;" value="olist_orders_dataset" vertex="1">
