@@ -57,16 +57,55 @@ FROM bronze.olist_customers
 ===========================================*/
 
 SELECT
-    order_id,
-    customer_id,
-    order_status,
-    order_purchase_timestamp,
-    order_approved_at,
-    order_delivered_carrier_date,
-    order_delivered_customer_date,
-    order_estimated_delivery_date,
+    TRIM(order_id) AS order_id,
+    CASE
+        WHEN LEN(TRIM(customer_id)) = 32 THEN TRIM(customer_id)
+        ELSE NULL
+    END AS customer_id,
+    CASE
+        WHEN TRIM(order_status) IN ('delivered', 'approved', 'created', 'processing', 'invoiced', 'unavailable', 'cancelled', 'shipped')
+        THEN TRIM(order_status)
+        ELSE NULL
+    END AS order_status,
+    CASE
+        WHEN order_status IS NULL THEN 'Source Null'
+        WHEN TRIM(order_status) IN ('delivered', 'approved', 'created', 'processing', 'invoiced', 'unavailable', 'cancelled', 'shipped')
+        THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_status_valid,
+    TRY_CAST(order_purchase_timestamp AS DATETIME2(0)) AS order_purchase_timestamp,
+    CASE
+        WHEN order_purchase_timestamp IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(order_purchase_timestamp AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_purchase_timestamp_valid,
+    TRY_CAST(order_approved_at AS DATETIME2(0)) AS order_approved_at,
+    CASE
+        WHEN order_approved_at IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(order_approved_at AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_approved_at_valid,
+    TRY_CAST(order_delivered_carrier_date AS DATETIME2(0)) AS order_delivered_carrier_date,
+    CASE
+        WHEN order_delivered_carrier_date IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(order_delivered_carrier_date AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_delivered_carrier_date_valid,
+    TRY_CAST(order_delivered_customer_date AS DATETIME2(0)) AS order_delivered_customer_date,
+    CASE
+        WHEN order_delivered_customer_date IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(order_delivered_customer_date AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_delivered_customer_date_valid,
+    TRY_CAST(order_estimated_delivery_date AS DATETIME2(0)) AS order_estimated_delivery_date,
+    CASE
+        WHEN order_estimated_delivery_date IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(order_estimated_delivery_date AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS order_estimated_delivery_date_valid,
     _dwh_source_file,
     _dwh_source_system,
     _dwh_load_datetime,
     _dwh_batch_id
 FROM bronze.olist_orders
+WHERE LEN(TRIM(order_id)) = 32
