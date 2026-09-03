@@ -130,17 +130,69 @@ WHERE LEN(TRIM(order_id)) = 32
 /*===========================================
                 Order Items table
 ===========================================*/
-
+WITH CTE_order_totals AS (
+    SELECT*,
+        COUNT(*) OVER(PARTITION BY TRIM(order_id)) AS total_order_items
+    FROM bronze.olist_order_items
+    WHERE
+        LEN(TRIM(order_id)) = 32
+        AND TRIM(order_item_id) <> ''
+        AND TRIM(order_item_id) NOT LIKE '%[^0-9]%'
+        AND TRY_CAST(TRIM(order_item_id) AS INT) IS NOT NULL
+        AND TRY_CAST(TRIM(order_item_id) AS INT) >= 1
+)
 SELECT
-    order_id,
-    order_item_id,
-    product_id,
-    seller_id,
-    shipping_limit_date,
-    price,
-    freight_value,
+    TRIM(order_id) AS order_id,
+    CAST(TRIM(order_item_id) AS INT) AS order_item_id,
+    total_order_items,
+    CASE
+        WHEN LEN(TRIM(product_id)) = 32 THEN TRIM(product_id)
+        ELSE NULL
+    END AS product_id,
+    CASE
+        WHEN NULLIF(TRIM(product_id), '') IS NULL THEN 'Source Null'
+        WHEN LEN(TRIM(product_id)) = 32 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS product_id_valid,
+    CASE
+        WHEN LEN(TRIM(seller_id)) = 32 THEN TRIM(seller_id)
+        ELSE NULL
+    END AS seller_id,
+    CASE
+        WHEN (NULLIF(TRIM(seller_id), '')) IS NULL THEN 'Source Null'
+        WHEN LEN(TRIM(seller_id)) = 32 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS seller_id_valid,
+    TRY_CAST(NULLIF(TRIM(shipping_limit_date), '') AS DATETIME2(0)) AS shipping_limit_date,
+    CASE
+        WHEN NULLIF(TRIM(shipping_limit_date), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(NULLIF(TRIM(shipping_limit_date), '') AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS shipping_limit_date_valid,
+    CASE
+        WHEN TRY_CAST(TRIM(price) AS DECIMAL(10,2)) >= 0 THEN TRY_CAST(TRIM(price) AS DECIMAL(10,2))
+        ELSE NULL
+    END AS price,
+    CASE
+        WHEN NULLIF(TRIM(price), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(price) AS DECIMAL(10,2)) >= 0 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS price_valid,
+    CASE
+        WHEN TRY_CAST(TRIM(freight_value) AS DECIMAL(10,2)) >=0 THEN TRY_CAST(TRIM(freight_value) AS DECIMAL(10,2))
+        ELSE NULL
+    END AS freight_value,
+    CASE
+        WHEN NULLIF(TRIM(freight_value), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(freight_value) AS DECIMAL(10,2)) >=0 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS freight_value_valid,
     _dwh_source_file,
     _dwh_source_system,
     _dwh_load_datetime,
     _dwh_batch_id
+FROM CTE_order_totals;
+
+
+SELECT*
 FROM bronze.olist_order_items
