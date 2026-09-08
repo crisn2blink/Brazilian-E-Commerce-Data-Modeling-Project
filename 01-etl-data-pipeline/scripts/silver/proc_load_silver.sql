@@ -241,7 +241,24 @@ SELECT
     AND TRY_CAST(TRIM(payment_sequential) AS INT) IS NOT NULL
     AND TRY_CAST(TRIM(payment_sequential) AS INT) >= 1;
 
-
+/*===========================================
+                Products table
+===========================================*/
+SELECT 
+    product_id,
+    product_category_name,
+    product_name_length,
+    product_description_length,
+    product_photos_qty,
+    product_weight_g,
+    product_length_cm,
+    product_height_cm,
+    product_width_cm,
+    _dwh_source_file,
+    _dwh_source_system,
+    _dwh_load_datetime,
+    _dwh_batch_id
+  FROM bronze.olist_products
 
 SELECT*
-FROM bronze.olist_payments
+FROM bronze.olist_products

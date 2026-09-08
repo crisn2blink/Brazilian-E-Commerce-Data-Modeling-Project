@@ -227,3 +227,21 @@ CONSTRAINT CK_payments_payment_value_valid
     CHECK (payment_value_valid IN('Source Null', 'Valid', 'Invalid'))
 );
 GO
+
+IF OBJECT_ID('silver.olist_products' 'U') IS NOT NULL
+    DROP TABLE silver.olist_products;
+CREATE TABLE silver.olist_products(
+    product_id,
+    product_category_name,
+    product_name_lenght,
+    product_description_lenght,
+    product_photos_qty,
+    product_weight_g,
+    product_length_cm,
+    product_height_cm,
+    product_width_cm,
+    _dwh_source_file,
+    _dwh_source_system,
+    _dwh_load_datetime,
+    _dwh_batch_id
+)
