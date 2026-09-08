@@ -111,8 +111,8 @@ CREATE TABLE bronze.olist_products
 (
     product_id NVARCHAR(100),
     product_category_name NVARCHAR(100),
-    product_name_lenght NVARCHAR(100),
-    product_description_lenght NVARCHAR(100),
+    product_name_length NVARCHAR(100),
+    product_description_length NVARCHAR(100),
     product_photos_qty NVARCHAR(100),
     product_weight_g NVARCHAR(100),
     product_length_cm NVARCHAR(100),
