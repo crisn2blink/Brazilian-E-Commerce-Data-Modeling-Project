@@ -193,6 +193,55 @@ SELECT
     _dwh_batch_id
 FROM CTE_order_totals;
 
+/*===========================================
+                Payments table
+===========================================*/
+SELECT
+    TRIM(order_id) AS order_id,
+    CAST(TRIM(payment_sequential) AS INT) AS payment_sequential,
+    CASE
+        WHEN TRIM(payment_type) IN (
+        'credit_card', 'debit_card', 'voucher', 'boleto', 'not_defined') THEN TRIM(payment_type)
+        ELSE NULL
+    END AS payment_type,
+    CASE
+        WHEN NULLIF(TRIM(payment_type), '') IS NULL THEN 'Source Null'
+        WHEN TRIM(payment_type) IN ('credit_card', 'debit_card', 'voucher', 'boleto', 'not_defined')
+        THEN 'Valid'
+        ELSE 'Invalid'
+    END AS payment_type_valid,
+    CASE
+        WHEN TRY_CAST(TRIM(payment_installments) AS INT) >= 1
+        THEN TRY_CAST(TRIM(payment_installments) AS INT)
+        ELSE NULL
+    END AS payment_installments,
+    CASE
+        WHEN NULLIF(TRIM(payment_installments), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(payment_installments) AS INT) >= 1 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS payment_installments_valid,
+    CASE
+        WHEN TRY_CAST(TRIM(payment_value) AS DECIMAL(10,2)) > 0 THEN TRY_CAST(TRIM(payment_value) AS DECIMAL(10,2))
+        ELSE NULL
+    END AS payment_value,
+    CASE
+        WHEN NULLIF(TRIM(payment_value), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(payment_value) AS DECIMAL(10,2)) >= 0 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS payment_value_valid,
+    _dwh_source_file,
+    _dwh_source_system,
+    _dwh_load_datetime,
+    _dwh_batch_id
+  FROM bronze.olist_payments
+  WHERE
+    LEN(TRIM(order_id)) = 32
+    AND TRIM(payment_sequential) <> ''
+    AND TRIM(payment_sequential) NOT LIKE '%[^0-9]%'
+    AND TRY_CAST(TRIM(payment_sequential) AS INT) IS NOT NULL
+    AND TRY_CAST(TRIM(payment_sequential) AS INT) >= 1;
+
+
 
 SELECT*
-FROM bronze.olist_order_items
+FROM bronze.olist_payments

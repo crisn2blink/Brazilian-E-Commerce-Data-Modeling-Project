@@ -166,6 +166,8 @@ CONSTRAINT PK_order_items
     PRIMARY KEY (order_id, order_item_id),
 CONSTRAINT CK_order_items_order_id_length
     CHECK (LEN(order_id) = 32),
+CONSTRAINT CK_order_items_order_item_id_positive
+    CHECK (order_item_id >= 1),
 CONSTRAINT CK_order_items_product_id_length
     CHECK (LEN(product_id) = 32),
 CONSTRAINT CK_order_items_product_id_valid
@@ -187,3 +189,41 @@ CONSTRAINT CK_order_items_freight_value_valid
 );
 
 --Create silver layer table for olist_payments
+IF OBJECT_ID ('silver.olist_payments', 'U') IS NOT NULL
+    DROP TABLE silver.olist_payments;
+CREATE TABLE silver.olist_payments
+(
+    order_id VARCHAR(32) NOT NULL,
+    payment_sequential INT NOT NULL,
+    payment_type VARCHAR(15),
+    payment_type_valid VARCHAR(15),
+    payment_installments INT,
+    payment_installments_valid VARCHAR(15),
+    payment_value DECIMAL(10,2),
+    payment_value_valid VARCHAR(15),
+    _dwh_source_file NVARCHAR(255),
+    _dwh_source_system NVARCHAR(50),
+    _dwh_load_datetime DATETIME2(0),
+    _dwh_batch_id UNIQUEIDENTIFIER,
+
+CONSTRAINT PK_payments
+    PRIMARY KEY (order_id, payment_sequential),
+CONSTRAINT CK_payments_order_id_length
+    CHECK (LEN(TRIM(order_id)) = 32),
+CONSTRAINT CK_payments_payment_sequential_positive
+    CHECK (payment_sequential >= 1),
+CONSTRAINT CK_payments_payment_type_category_consistency
+    CHECK (payment_type IN(
+        'credit_card', 'debit_card', 'voucher', 'boleto', 'not_defined')),
+CONSTRAINT CK_payments_payment_type_valid
+    CHECK (payment_type_valid IN('Source Null', 'Valid', 'Invalid')),
+CONSTRAINT CK_payments_payment_installments_positive
+    CHECK (payment_installments >= 1),
+CONSTRAINT CK_payments_payment_installments_valid
+    CHECK (payment_installments_valid IN('Source Null', 'Valid', 'Invalid')),
+CONSTRAINT CK_payments_payment_value_positive
+    CHECK (payment_value > 0),
+CONSTRAINT CK_payments_payment_value_valid
+    CHECK (payment_value_valid IN('Source Null', 'Valid', 'Invalid'))
+);
+GO
