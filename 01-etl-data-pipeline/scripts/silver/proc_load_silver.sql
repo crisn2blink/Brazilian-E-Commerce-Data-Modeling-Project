@@ -245,20 +245,238 @@ SELECT
                 Products table
 ===========================================*/
 SELECT 
-    product_id,
-    product_category_name,
-    product_name_length,
-    product_description_length,
-    product_photos_qty,
-    product_weight_g,
-    product_length_cm,
-    product_height_cm,
-    product_width_cm,
+    TRIM(product_id) AS product_id,
+    CASE
+        WHEN NULLIF(TRIM(product_category_name), '') IS NULL THEN NULL
+        WHEN TRIM(product_category_name) IN(
+            'agro_industria_e_comercio',
+            'alimentos',
+            'alimentos_bebidas',
+            'artes',
+            'artes_e_artesanato',
+            'artigos_de_festas',
+            'artigos_de_natal',
+            'audio',
+            'automotivo',
+            'bebes',
+            'bebidas',
+            'beleza_saude',
+            'brinquedos',
+            'cama_mesa_banho',
+            'casa_conforto',
+            'casa_conforto_2',
+            'casa_construcao',
+            'cds_dvds_musicais',
+            'cine_foto',
+            'climatizacao',
+            'consoles_games',
+            'construcao_ferramentas_construcao',
+            'construcao_ferramentas_ferramentas',
+            'construcao_ferramentas_iluminacao',
+            'construcao_ferramentas_jardim',
+            'construcao_ferramentas_seguranca',
+            'cool_stuff',
+            'dvds_blu_ray',
+            'eletrodomesticos',
+            'eletrodomesticos_2',
+            'eletronicos',
+            'eletroportateis',
+            'esporte_lazer',
+            'fashion_bolsas_e_acessorios',
+            'fashion_calcados',
+            'fashion_esporte',
+            'fashion_roupa_feminina',
+            'fashion_roupa_infanto_juvenil',
+            'fashion_roupa_masculina',
+            'fashion_underwear_e_moda_praia',
+            'ferramentas_jardim',
+            'flores',
+            'fraldas_higiene',
+            'industria_comercio_e_negocios',
+            'informatica_acessorios',
+            'instrumentos_musicais',
+            'la_cuisine',
+            'livros_importados',
+            'livros_interesse_geral',
+            'livros_tecnicos',
+            'malas_acessorios',
+            'market_place',
+            'moveis_colchao_e_estofado',
+            'moveis_cozinha_area_de_servico_jantar_e_jardim',
+            'moveis_decoracao',
+            'moveis_escritorio',
+            'moveis_quarto',
+            'moveis_sala',
+            'musica',
+            'papelaria',
+            'pc_gamer',
+            'pcs',
+            'perfumaria',
+            'pet_shop',
+            'portateis_casa_forno_e_cafe',
+            'portateis_cozinha_e_preparadores_de_alimentos',
+            'relogios_presentes',
+            'seguros_e_servicos',
+            'sinalizacao_e_seguranca',
+            'tablets_impressao_imagem',
+            'telefonia',
+            'telefonia_fixa',
+            'utilidades_domesticas'
+        ) THEN TRIM(product_category_name)
+        ELSE NULL
+    END AS product_category_name,
+    CASE
+        WHEN NULLIF(TRIM(product_category_name), '') IS NULL THEN 'Source Null'
+        WHEN TRIM(product_category_name) IN(
+            'agro_industria_e_comercio',
+            'alimentos',
+            'alimentos_bebidas',
+            'artes',
+            'artes_e_artesanato',
+            'artigos_de_festas',
+            'artigos_de_natal',
+            'audio',
+            'automotivo',
+            'bebes',
+            'bebidas',
+            'beleza_saude',
+            'brinquedos',
+            'cama_mesa_banho',
+            'casa_conforto',
+            'casa_conforto_2',
+            'casa_construcao',
+            'cds_dvds_musicais',
+            'cine_foto',
+            'climatizacao',
+            'consoles_games',
+            'construcao_ferramentas_construcao',
+            'construcao_ferramentas_ferramentas',
+            'construcao_ferramentas_iluminacao',
+            'construcao_ferramentas_jardim',
+            'construcao_ferramentas_seguranca',
+            'cool_stuff',
+            'dvds_blu_ray',
+            'eletrodomesticos',
+            'eletrodomesticos_2',
+            'eletronicos',
+            'eletroportateis',
+            'esporte_lazer',
+            'fashion_bolsas_e_acessorios',
+            'fashion_calcados',
+            'fashion_esporte',
+            'fashion_roupa_feminina',
+            'fashion_roupa_infanto_juvenil',
+            'fashion_roupa_masculina',
+            'fashion_underwear_e_moda_praia',
+            'ferramentas_jardim',
+            'flores',
+            'fraldas_higiene',
+            'industria_comercio_e_negocios',
+            'informatica_acessorios',
+            'instrumentos_musicais',
+            'la_cuisine',
+            'livros_importados',
+            'livros_interesse_geral',
+            'livros_tecnicos',
+            'malas_acessorios',
+            'market_place',
+            'moveis_colchao_e_estofado',
+            'moveis_cozinha_area_de_servico_jantar_e_jardim',
+            'moveis_decoracao',
+            'moveis_escritorio',
+            'moveis_quarto',
+            'moveis_sala',
+            'musica',
+            'papelaria',
+            'pc_gamer',
+            'pcs',
+            'perfumaria',
+            'pet_shop',
+            'portateis_casa_forno_e_cafe',
+            'portateis_cozinha_e_preparadores_de_alimentos',
+            'relogios_presentes',
+            'seguros_e_servicos',
+            'sinalizacao_e_seguranca',
+            'tablets_impressao_imagem',
+            'telefonia',
+            'telefonia_fixa',
+            'utilidades_domesticas'
+        ) THEN 'Valid'
+        ELSE 'Invalid'
+    END AS product_category_name_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_name_length), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_name_length) AS INT) >= 1 THEN TRIM(product_name_length)
+        ELSE NULL
+    END AS product_name_length,
+    CASE
+        WHEN NULLIF(TRIM(product_name_length), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_name_length) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_name_length_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_description_length), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_description_length) AS INT) >= 1 THEN TRIM(product_description_length)
+        ELSE NULL
+    END AS product_description_length,
+    CASE
+        WHEN NULLIF(TRIM(product_description_length), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_description_length) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_description_length_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_photos_qty), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN TRIM(product_photos_qty)
+        ELSE NULL
+    END AS product_photos_qty,
+    CASE
+        WHEN NULLIF(TRIM(product_photos_qty), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_photos_qty_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_weight_g), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_weight_g) AS INT) >= 1 THEN TRIM(product_weight_g)
+        ELSE NULL
+    END AS product_weight_g,
+    CASE
+        WHEN NULLIF(TRIM(product_weight_g), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_weight_g) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_weight_g_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_length_cm), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_length_cm) AS INT) >= 1 THEN TRIM(product_length_cm)
+        ELSE NULL
+    END AS product_length_cm,
+    CASE
+        WHEN NULLIF(TRIM(product_length_cm), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_length_cm) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_length_cm_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_height_cm), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_height_cm) AS INT) >= 1 THEN TRIM(product_height_cm)
+        ELSE NULL
+    END AS product_height_cm,
+    CASE
+        WHEN NULLIF(TRIM(product_height_cm), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_height_cm) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_height_cm_valid,
+    CASE
+        WHEN NULLIF(TRIM(product_width_cm), '') IS NULL THEN NULL
+        WHEN CAST(TRIM(product_width_cm) AS INT) >= 1 THEN TRIM(product_width_cm)
+        ELSE NULL
+    END AS product_width_cm,
+    CASE
+        WHEN NULLIF(TRIM(product_width_cm), '') IS NULL THEN 'Source Null'
+        WHEN CAST(TRIM(product_width_cm) AS INT) >= 1 THEN 'Valid'
+        ELSE NULL
+    END AS product_width_cm_valid,
     _dwh_source_file,
     _dwh_source_system,
     _dwh_load_datetime,
     _dwh_batch_id
   FROM bronze.olist_products
-
-SELECT*
-FROM bronze.olist_products
+  WHERE LEN(TRIM(product_id)) =32
