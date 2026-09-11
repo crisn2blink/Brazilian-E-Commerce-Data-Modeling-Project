@@ -228,6 +228,7 @@ CONSTRAINT CK_payments_payment_value_valid
 );
 GO
 
+--Create silver layer table for olist_products
 IF OBJECT_ID ('silver.olist_products', 'U') IS NOT NULL
     DROP TABLE silver.olist_products;
 CREATE TABLE silver.olist_products
@@ -366,3 +367,36 @@ CONSTRAINT CK_products_product_width_cm_valid
 
 );
 GO
+
+--Create silver layer table for olist_reviews
+IF OBJECT_ID ('silver.olist_reviews', 'U') IS NOT NULL
+    DROP TABLE silver.olist_reviews;
+CREATE TABLE silver.olist_reviews(
+    review_id VARCHAR(32) NOT NULL,
+    order_id VARCHAR(32) NOT NULL,
+    review_score INT,
+    review_score_valid VARCHAR(15),
+    review_creation_date DATE,
+    review_creation_date_valid VARCHAR(15),
+    review_answer_timestamp DATETIME2(0),
+    review_answer_timestamp_valid VARCHAR(15),
+    _dwh_source_file NVARCHAR(255),
+    _dwh_source_system NVARCHAR(50),
+    _dwh_load_datetime DATETIME2(0),
+    _dwh_batch_id UNIQUEIDENTIFIER,
+
+CONSTRAINT PK_olist_reviews
+    PRIMARY KEY (review_id, order_id),
+CONSTRAINT CK_review_id_length
+    CHECK (LEN(TRIM(review_id)) = 32),
+CONSTRAINT CK_order_id_length
+    CHECK (LEN(TRIM(order_id)) = 32),
+CONSTRAINT CK_review_score_inclusion
+    CHECK (review_score BETWEEN 1 AND 5),
+CONSTRAINT CK_review_score_valid
+    CHECK (review_score_valid IN ('Source Null', 'Valid', 'Invalid')),
+CONSTRAINT CK_review_creation_date_valid
+    CHECK (review_creation_date_valid IN ('Source Null', 'Valid', 'Invalid')),
+CONSTRAINT CK_review_answer_timestamp_valid
+    CHECK (review_answer_timestamp_valid IN ('Source Null', 'Valid', 'Invalid'))
+);

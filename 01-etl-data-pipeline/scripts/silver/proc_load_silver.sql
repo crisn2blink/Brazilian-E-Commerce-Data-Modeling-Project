@@ -406,72 +406,72 @@ SELECT
     END AS product_category_name_valid,
     CASE
         WHEN NULLIF(TRIM(product_name_length), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_name_length) AS INT) >= 1 THEN TRIM(product_name_length)
+        WHEN TRY_CAST(TRIM(product_name_length) AS INT) >= 1 THEN TRY_CAST(TRIM(product_name_length) AS INT)
         ELSE NULL
     END AS product_name_length,
     CASE
         WHEN NULLIF(TRIM(product_name_length), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_name_length) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_name_length) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_name_length_valid,
     CASE
         WHEN NULLIF(TRIM(product_description_length), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_description_length) AS INT) >= 1 THEN TRIM(product_description_length)
+        WHEN TRY_CAST(TRIM(product_description_length) AS INT) >= 1 THEN TRY_CAST(TRIM(product_description_length) AS INT)
         ELSE NULL
     END AS product_description_length,
     CASE
         WHEN NULLIF(TRIM(product_description_length), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_description_length) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_description_length) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_description_length_valid,
     CASE
         WHEN NULLIF(TRIM(product_photos_qty), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN TRIM(product_photos_qty)
+        WHEN TRY_CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN TRY_CAST(TRIM(product_photos_qty) AS INT)
         ELSE NULL
     END AS product_photos_qty,
     CASE
         WHEN NULLIF(TRIM(product_photos_qty), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_photos_qty) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_photos_qty_valid,
     CASE
         WHEN NULLIF(TRIM(product_weight_g), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_weight_g) AS INT) >= 1 THEN TRIM(product_weight_g)
+        WHEN TRY_CAST(TRIM(product_weight_g) AS INT) >= 1 THEN TRY_CAST(TRIM(product_weight_g) AS INT)
         ELSE NULL
     END AS product_weight_g,
     CASE
         WHEN NULLIF(TRIM(product_weight_g), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_weight_g) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_weight_g) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_weight_g_valid,
     CASE
         WHEN NULLIF(TRIM(product_length_cm), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_length_cm) AS INT) >= 1 THEN TRIM(product_length_cm)
+        WHEN TRY_CAST(TRIM(product_length_cm) AS INT) >= 1 THEN TRY_CAST(TRIM(product_length_cm) AS INT)
         ELSE NULL
     END AS product_length_cm,
     CASE
         WHEN NULLIF(TRIM(product_length_cm), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_length_cm) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_length_cm) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_length_cm_valid,
     CASE
         WHEN NULLIF(TRIM(product_height_cm), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_height_cm) AS INT) >= 1 THEN TRIM(product_height_cm)
+        WHEN TRY_CAST(TRIM(product_height_cm) AS INT) >= 1 THEN TRY_CAST(TRIM(product_height_cm) AS INT)
         ELSE NULL
     END AS product_height_cm,
     CASE
         WHEN NULLIF(TRIM(product_height_cm), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_height_cm) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_height_cm) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_height_cm_valid,
     CASE
         WHEN NULLIF(TRIM(product_width_cm), '') IS NULL THEN NULL
-        WHEN CAST(TRIM(product_width_cm) AS INT) >= 1 THEN TRIM(product_width_cm)
+        WHEN TRY_CAST(TRIM(product_width_cm) AS INT) >= 1 THEN TRY_CAST(TRIM(product_width_cm) AS INT)
         ELSE NULL
     END AS product_width_cm,
     CASE
         WHEN NULLIF(TRIM(product_width_cm), '') IS NULL THEN 'Source Null'
-        WHEN CAST(TRIM(product_width_cm) AS INT) >= 1 THEN 'Valid'
+        WHEN TRY_CAST(TRIM(product_width_cm) AS INT) >= 1 THEN 'Valid'
         ELSE NULL
     END AS product_width_cm_valid,
     _dwh_source_file,
@@ -480,3 +480,40 @@ SELECT
     _dwh_batch_id
   FROM bronze.olist_products
   WHERE LEN(TRIM(product_id)) =32
+
+  /*===========================================
+                Reviews table
+===========================================*/
+SELECT
+    TRIM(review_id) AS review_id,
+    TRIM(order_id) AS order_id,
+    CASE
+        WHEN NULLIF(TRIM(review_score), '') IS NULL THEN NULL
+        WHEN TRY_CAST(TRIM(review_score) AS INT) BETWEEN 1 AND 5 THEN TRY_CAST(TRIM(review_score) AS INT)
+        ELSE NULL
+    END AS review_score,
+    CASE
+        WHEN NULLIF(TRIM(review_score), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(review_score) AS INT) BETWEEN 1 AND 5 THEN 'Valid'
+        ELSE 'Invalid'
+    END AS review_score_valid,
+    TRY_CAST(NULLIF(TRIM(review_creation_date), '') AS DATE) AS review_creation_date,
+    CASE
+        WHEN NULLIF(TRIM(review_creation_date), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(review_creation_date) AS DATE) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS review_creation_date_valid,
+    TRY_CAST(NULLIF(TRIM(review_answer_timestamp), '') AS DATETIME2(0)) AS review_answer_timestamp,
+    CASE
+        WHEN NULLIF(TRIM(review_answer_timestamp), '') IS NULL THEN 'Source Null'
+        WHEN TRY_CAST(TRIM(review_answer_timestamp) AS DATETIME2(0)) IS NOT NULL THEN 'Valid'
+        ELSE 'Invalid'
+    END AS review_answer_timestamp_valid,
+    _dwh_source_file,
+    _dwh_source_system,
+    _dwh_load_datetime,
+    _dwh_batch_id
+FROM bronze.olist_reviews
+WHERE
+    LEN(TRIM(review_id)) = 32
+    AND LEN(TRIM(order_id)) = 32;
