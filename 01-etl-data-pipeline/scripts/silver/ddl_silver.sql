@@ -187,6 +187,7 @@ CONSTRAINT CK_order_items_freight_value_non_negative
 CONSTRAINT CK_order_items_freight_value_valid
     CHECK (freight_value_valid IN ('Source Null', 'Valid', 'Invalid'))
 );
+GO
 
 --Create silver layer table for olist_payments
 IF OBJECT_ID ('silver.olist_payments', 'U') IS NOT NULL
@@ -399,4 +400,52 @@ CONSTRAINT CK_review_creation_date_valid
     CHECK (review_creation_date_valid IN ('Source Null', 'Valid', 'Invalid')),
 CONSTRAINT CK_review_answer_timestamp_valid
     CHECK (review_answer_timestamp_valid IN ('Source Null', 'Valid', 'Invalid'))
+);
+GO
+
+--Create silver layer table for olist_sellers
+IF OBJECT_ID('silver.olist_sellers', 'U') IS NOT NULL
+    DROP TABLE silver.olist_sellers;
+CREATE TABLE silver.olist_sellers(
+    seller_id VARCHAR(32) NOT NULL,
+    seller_zip_code_cleaned VARCHAR(5),
+    seller_zip_code_cleaned_valid VARCHAR(15) NOT NULL,
+    expected_state_seller_city NVARCHAR(100),
+    zip_expected_state VARCHAR(2),
+    seller_location_consistency VARCHAR(12) NOT NULL,
+    _dwh_source_file NVARCHAR(255),
+    _dwh_source_system NVARCHAR(50),
+    _dwh_load_datetime DATETIME2(0),
+    _dwh_batch_id UNIQUEIDENTIFIER,
+
+CONSTRAINT PK_olist_sellers
+     PRIMARY KEY (seller_id),
+CONSTRAINT CK_olist_sellers_seller_id_length
+    CHECK (
+        LEN(TRIM(seller_id)) = 32),
+CONSTRAINT CK_olist_sellers_zip_code_format
+    CHECK (seller_zip_code_cleaned IS NULL
+            OR
+                (LEN(TRIM(seller_zip_code_cleaned)) = 5
+                AND TRIM(seller_zip_code_cleaned) NOT LIKE '%[^0-9]%')
+        ),
+CONSTRAINT CK_olist_sellers_zip_code_valid_status
+    CHECK (seller_zip_code_cleaned_valid IN ('Valid','Invalid','Source Null')),
+CONSTRAINT CK_olist_sellers_expected_city
+    CHECK (expected_state_seller_city IS NULL
+        OR LEN(TRIM(expected_state_seller_city)) > 0),
+CONSTRAINT CK_olist_sellers_zip_expected_state
+    CHECK (zip_expected_state IS NULL
+        OR zip_expected_state IN
+            ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF',
+            'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
+            'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS',
+            'RO', 'RR', 'SC', 'SP', 'SE', 'TO')
+        ),
+CONSTRAINT CK_olist_sellers_location_consistency
+    CHECK (
+        seller_location_consistency IN
+            ('consistent','inconsistent'
+            )
+        )
 );
