@@ -91,16 +91,15 @@ HAVING customer_id IS NULL
 -- Check for Expected Bronze Primary Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(customer_id) AS customer_id
-FROM bronze.olist_customers
-WHERE LEN(TRIM(customer_id)) = 32
-
-EXCEPT
-
-SELECT
-    customer_id
-FROM silver.olist_customers;
+SELECT DISTINCT
+    CAST(TRIM(b.customer_id) AS VARCHAR(32)) AS customer_id
+FROM bronze.olist_customers AS b
+WHERE LEN(TRIM(b.customer_id)) = 32
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_customers AS s
+        WHERE s.customer_id = CAST(TRIM(b.customer_id) AS VARCHAR(32))
+    );
 
 
 -- Check Primary Key Length
@@ -265,16 +264,15 @@ HAVING order_id IS NULL
 -- Check for Expected Bronze Primary Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(order_id) AS order_id
-FROM bronze.olist_orders
-WHERE LEN(TRIM(order_id)) = 32
-
-EXCEPT
-
-SELECT
-    order_id
-FROM silver.olist_orders;
+SELECT DISTINCT
+    CAST(TRIM(b.order_id) AS VARCHAR(32)) AS order_id
+FROM bronze.olist_orders AS b
+WHERE LEN(TRIM(b.order_id)) = 32
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_orders AS s
+        WHERE s.order_id = CAST(TRIM(b.order_id) AS VARCHAR(32))
+    );
 
 
 -- Check Primary Key Length
@@ -490,23 +488,22 @@ HAVING
 -- Check for Expected Bronze Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(order_id) AS order_id,
-    TRY_CAST(TRIM(order_item_id) AS INT) AS order_item_id
-FROM bronze.olist_order_items
+SELECT DISTINCT
+    CAST(TRIM(b.order_id) AS VARCHAR(32)) AS order_id,
+    TRY_CAST(TRIM(b.order_item_id) AS INT) AS order_item_id
+FROM bronze.olist_order_items AS b
 WHERE
-    LEN(TRIM(order_id)) = 32
-    AND TRIM(order_item_id) <> ''
-    AND TRIM(order_item_id) NOT LIKE '%[^0-9]%'
-    AND TRY_CAST(TRIM(order_item_id) AS INT) IS NOT NULL
-    AND TRY_CAST(TRIM(order_item_id) AS INT) >= 1
-
-EXCEPT
-
-SELECT
-    order_id,
-    order_item_id
-FROM silver.olist_order_items;
+    LEN(TRIM(b.order_id)) = 32
+    AND TRIM(b.order_item_id) <> ''
+    AND TRIM(b.order_item_id) NOT LIKE '%[^0-9]%'
+    AND TRY_CAST(TRIM(b.order_item_id) AS INT) IS NOT NULL
+    AND TRY_CAST(TRIM(b.order_item_id) AS INT) >= 1
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_order_items AS s
+        WHERE s.order_id = CAST(TRIM(b.order_id) AS VARCHAR(32))
+          AND s.order_item_id = TRY_CAST(TRIM(b.order_item_id) AS INT)
+    );
 
 
 -- Check Required Primary Key Values
@@ -748,23 +745,22 @@ HAVING
 -- Check for Expected Bronze Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(order_id) AS order_id,
-    TRY_CAST(TRIM(payment_sequential) AS INT) AS payment_sequential
-FROM bronze.olist_payments
+SELECT DISTINCT
+    CAST(TRIM(b.order_id) AS VARCHAR(32)) AS order_id,
+    TRY_CAST(TRIM(b.payment_sequential) AS INT) AS payment_sequential
+FROM bronze.olist_payments AS b
 WHERE
-    LEN(TRIM(order_id)) = 32
-    AND TRIM(payment_sequential) <> ''
-    AND TRIM(payment_sequential) NOT LIKE '%[^0-9]%'
-    AND TRY_CAST(TRIM(payment_sequential) AS INT) IS NOT NULL
-    AND TRY_CAST(TRIM(payment_sequential) AS INT) >= 1
-
-EXCEPT
-
-SELECT
-    order_id,
-    payment_sequential
-FROM silver.olist_payments;
+    LEN(TRIM(b.order_id)) = 32
+    AND TRIM(b.payment_sequential) <> ''
+    AND TRIM(b.payment_sequential) NOT LIKE '%[^0-9]%'
+    AND TRY_CAST(TRIM(b.payment_sequential) AS INT) IS NOT NULL
+    AND TRY_CAST(TRIM(b.payment_sequential) AS INT) >= 1
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_payments AS s
+        WHERE s.order_id = CAST(TRIM(b.order_id) AS VARCHAR(32))
+          AND s.payment_sequential = TRY_CAST(TRIM(b.payment_sequential) AS INT)
+    );
 
 
 -- Check Required Primary Key Values
@@ -937,16 +933,15 @@ HAVING product_id IS NULL
 -- Check for Expected Bronze Primary Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(product_id) AS product_id
-FROM bronze.olist_products
-WHERE LEN(TRIM(product_id)) = 32
-
-EXCEPT
-
-SELECT
-    product_id
-FROM silver.olist_products;
+SELECT DISTINCT
+    CAST(TRIM(b.product_id) AS VARCHAR(32)) AS product_id
+FROM bronze.olist_products AS b
+WHERE LEN(TRIM(b.product_id)) = 32
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_products AS s
+        WHERE s.product_id = CAST(TRIM(b.product_id) AS VARCHAR(32))
+    );
 
 
 -- Check Primary Key Length
@@ -1130,20 +1125,19 @@ HAVING
 -- Check for Expected Bronze Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(review_id) AS review_id,
-    TRIM(order_id) AS order_id
-FROM bronze.olist_reviews
+SELECT DISTINCT
+    CAST(TRIM(b.review_id) AS VARCHAR(32)) AS review_id,
+    CAST(TRIM(b.order_id) AS VARCHAR(32)) AS order_id
+FROM bronze.olist_reviews AS b
 WHERE
-    LEN(TRIM(review_id)) = 32
-    AND LEN(TRIM(order_id)) = 32
-
-EXCEPT
-
-SELECT
-    review_id,
-    order_id
-FROM silver.olist_reviews;
+    LEN(TRIM(b.review_id)) = 32
+    AND LEN(TRIM(b.order_id)) = 32
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_reviews AS s
+        WHERE s.review_id = CAST(TRIM(b.review_id) AS VARCHAR(32))
+          AND s.order_id = CAST(TRIM(b.order_id) AS VARCHAR(32))
+    );
 
 
 -- Check Primary Key Lengths
@@ -1306,16 +1300,15 @@ HAVING seller_id IS NULL
 -- Check for Expected Bronze Primary Keys Missing from Silver
 -- Expectation: No Results
 
-SELECT
-    TRIM(seller_id) AS seller_id
-FROM bronze.olist_sellers
-WHERE LEN(TRIM(seller_id)) = 32
-
-EXCEPT
-
-SELECT
-    seller_id
-FROM silver.olist_sellers;
+SELECT DISTINCT
+    CAST(TRIM(b.seller_id) AS VARCHAR(32)) AS seller_id
+FROM bronze.olist_sellers AS b
+WHERE LEN(TRIM(b.seller_id)) = 32
+    AND NOT EXISTS (
+        SELECT 1
+        FROM silver.olist_sellers AS s
+        WHERE s.seller_id = CAST(TRIM(b.seller_id) AS VARCHAR(32))
+    );
 
 
 -- Check Primary Key Length
